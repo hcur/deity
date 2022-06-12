@@ -23,20 +23,23 @@ it's somewhat readable. :)
 
 ## usage
 
-	Usage: a.out [OPTION...] <MODIFER>
-	deity --- a daemon-esque way to simulate modifier keys
+```
+Usage: deity [OPTION...] <MODIFER>
+deity --- a daemon-esque way to simulate modifier keys
 
-	    -m, --modifier=<MODIFIER>  Modifier to prefix keys with.
-		-s, --state                Start deity in deity-state.
-		-t, --mode                 Start deity in deity-mode.
-		-?, --help                 Give this help list
-		--usage                    Give a short usage message
-		-V, --version              Print program version
+	-m, --modifier=<MODIFIER>  Modifier to prefix keys with.
+	-s, --state                Start deity in deity-state.
+	-t, --mode                 Start deity in deity-mode.
+	-?, --help                 Give this help list
+	--usage                    Give a short usage message
+	-V, --version              Print program version
 
-	Mandatory or optional arguments to long options are also mandatory or optional
-	for any corresponding short options.
+Mandatory or optional arguments to long options are also mandatory or optional
+for any corresponding short options.
 
-	Report bugs to <hcurfman@keemail.me>.
+Report bugs to <hcurfman@keemail.me>.
+```
+
 
 ## install
 
