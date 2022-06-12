@@ -43,7 +43,7 @@ it's somewhat readable. :)
 deity comes with a Makefile, so just:
 
 	git clone https://github.com/hydra989/deity
-	cd deity # or wherever you decide to clone this
+	cd deity
 	sudo make install
 
 ## todo
