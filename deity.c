@@ -7,20 +7,19 @@
 #include <X11/Xutil.h>
 
 
+/* supported modifiers:
+ *
+ *  ControlMask
+ *  Mod1Mask
+ *  Mod4Mask
+ *  ShiftMask
+ *
+ * more can be added by modifying the parse_opt function. */
+
 /* this is the key that signals an escape from
  * deity mode --- feel free to change it to any
  * valid x11 keysym */
 #define DEITY_ESCAPE_KEY XK_Escape
-
-/* this is define outside of the argument struct
-   because it is used throughout later on independently */
-enum deitymasks {
-	CONTROLMASK,
-	MOD1MASK, // alt
-	MOD4MASK,
-	SHIFTMASK,
-	MODERR
-};
 
 /* xlib necessities */
 static Display *dpy;
@@ -45,7 +44,7 @@ struct arguments {
 		DEITY_STATE,
 		TYPERR
 	} type;
-	enum deitymasks modifier;
+	unsigned int modifier;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -57,13 +56,13 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 	case 'm':
 		/* set modifier */
 		if (strcmp("Control", arg) == 0 || strcmp("ControlMask", arg) == 0)
-			args->modifier = CONTROLMASK;
+			args->modifier = ControlMask;
 		else if (strcmp("Mod1", arg) == 0 || strcmp("Mod1Mask", arg) == 0)
-			args->modifier = MOD1MASK;
+			args->modifier = Mod1Mask;
 		else if (strcmp("Mod4", arg) == 0 || strcmp("Mod4Mask", arg) == 0)
-			args->modifier = MOD4MASK;
+			args->modifier = Mod4Mask;
 		else if (strcmp("Shift", arg) == 0 || strcmp("ShiftMask", arg) == 0)
-			args->modifier = SHIFTMASK;
+			args->modifier = ShiftMask;
 		break;
 	case 's':
 		/* deity state */
@@ -150,8 +149,8 @@ deity(void)
 				XGetInputFocus(dpy, &winFocus, &revert);
 
 				/* create and send the key events */
-				XKeyEvent newxev1 = createxev(ev, KeyPress, matchenumkeysym(), winFocus);
-				XKeyEvent newxev2 = createxev(ev, KeyRelease, matchenumkeysym(), winFocus);
+				XKeyEvent newxev1 = createxev(ev, KeyPress, ev.xkey.state|arguments.modifier, winFocus);
+				XKeyEvent newxev2 = createxev(ev, KeyRelease, ev.xkey.state|arguments.modifier, winFocus);
 				XSendEvent(dpy, winFocus, True, KeyPressMask, (XEvent *)&newxev1);
 				XSendEvent(dpy, winFocus, True, KeyReleaseMask, (XEvent *)&newxev2);
 				XFlush(dpy);
@@ -176,27 +175,8 @@ deitygrabkeys(void)
 	unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
-	for (j = 0; j < MODERR; j++)
+	for (j = 0; j < 4; j++)
 		XGrabKey(dpy, AnyKey, modifiers[j], root, False, GrabModeAsync, GrabModeAsync);
-}
-
-/* utility function, matches enum types to KeySyms */
-unsigned int
-matchenumkeysym(void)
-{
-	switch(arguments.modifier)
-	{
-	case CONTROLMASK:
-		return ControlMask;
-	case MOD1MASK:
-		return Mod1Mask;
-	case MOD4MASK:
-		return Mod4Mask;
-	case SHIFTMASK:
-		return ShiftMask;
-	default:
-		return -1;
-	}
 }
 
 /* setup the aforementioned xlib necessities */
@@ -230,12 +210,12 @@ int main(int argc, char *argv[])
 	setup();
 	/* set defaults --- can't run without flags */
 	arguments.type = TYPERR;
-	arguments.modifier = MODERR;
+	arguments.modifier = -1;
 
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
 	/* check to ensure flags have been set */
-	if (arguments.modifier == MODERR)
+	if (arguments.modifier == -1)
 		/* FIXME: should replace with argp_usage */
 		exit(1);
 	else if (arguments.type == TYPERR)

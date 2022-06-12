@@ -40,7 +40,6 @@ for any corresponding short options.
 Report bugs to <hcurfman@keemail.me>.
 ```
 
-
 ## install
 
 deity comes with a Makefile, so just:
@@ -51,6 +50,8 @@ deity comes with a Makefile, so just:
 
 ## todo
 
- - support for multiple modifiers
- - better error handling
- - verbose mode?
+- ~~support for multiple modifiers~~
+   - deity allows adding a mask to a keypress with modifier
+   - next support passing multiple modifiers into deity
+- better error handling
+- verbose mode?
