@@ -27,7 +27,7 @@ static Window root;
 static unsigned int numlockmask = 0;
 
 /* handle argp */
-const char *argp_program_version = "deity 20220611-01";
+const char *argp_program_version = "deity 20220612.1";
 const char *argp_program_bug_address = "<hcurfman@keemail.me>";
 static char doc[] = "deity --- a daemon-esque way to simulate modifier keys";
 static char args_doc[] = "<MODIFER>";
@@ -48,7 +48,7 @@ struct arguments {
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
-    struct arguments *args = state->input;
+	struct arguments *args = state->input;
 	
 	/* match args */
 	switch (key)
@@ -76,7 +76,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 		/* do nothing -- err will  throw somewhere else needbe */
 		break;
 	}
-	
+
     return 0;
 }
 
@@ -144,7 +144,7 @@ deity(void)
 				XUngrabKey(dpy, AnyKey, AnyModifier, root);
 
 				/* get focused window */
-                Window winFocus;
+				Window winFocus;
 				int revert;
 				XGetInputFocus(dpy, &winFocus, &revert);
 

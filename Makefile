@@ -1,4 +1,5 @@
 NAME = deity
+VERSION = 20220612.1
 
 CC = gcc
 CFLAGS += -lX11
@@ -11,15 +12,15 @@ ${NAME}: ${NAME}.c
 	$(CC) ${CFLAGS} -o ${NAME} ${NAME}.c
 
 install:
-	echo installing ${NAME} executable to ${DESTDIR}${PREFIX}${BINDIR}
-	install -Dm775 ${NAME} ${DESTDIR}${PREFIX}${BINDIR}
+	@echo installing ${NAME} executable to ${DESTDIR}${PREFIX}${BINDIR}
+	@install -Dm775 ${NAME} ${DESTDIR}${PREFIX}${BINDIR}
 
 uninstall:
-	echo removing ${NAME} executable from ${DESTDIR}${PREFIX}${BINDIR}
-	rm -f ${DESTDIR}${BINDIR}
+	@echo removing ${NAME} executable from ${DESTDIR}${PREFIX}${BINDIR}
+	@rm -f ${DESTDIR}${BINDIR}
 
 clean:
-	echo cleaning
-	rm -fv ${NAME} ${WMNAME}.o
+	@echo cleaning
+	@rm -fv ${NAME} ${WMNAME}.o
 
 .PHONY: clean install uninstall
