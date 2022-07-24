@@ -14,7 +14,7 @@
  *  Mod4Mask
  *  ShiftMask
  *
- * more can be added by modifying the parse_opt function. */
+ * more can be added by modifying the match_modifier function. */
 
 /* this is the key that signals an escape from
  * deity mode --- feel free to change it to any
@@ -34,11 +34,11 @@ static char args_doc[] = "<MODIFER>";
 static struct argp_option options[] = {
 	{"mode",     't', 0,            0, "Start deity in deity-mode."},
 	{"state",    's', 0,            0, "Start deity in deity-state."},
-	{"modifier", 'm', "<MODIFIER>", 0, "Modifier to prefix keys with."},
 	{0}
 };
 
 struct arguments {
+	char *args[1];
 	enum {
 		DEITY_MODE,
 		DEITY_STATE,
@@ -47,23 +47,24 @@ struct arguments {
 	unsigned int modifier;
 };
 
+int match_modifier(char* arg) {
+	if (strcmp("Control", arg) == 0 || strcmp("ControlMask", arg) == 0)
+		return ControlMask;
+	else if (strcmp("Mod1", arg) == 0 || strcmp("Mod1Mask", arg) == 0)
+		return Mod1Mask;
+	else if (strcmp("Mod4", arg) == 0 || strcmp("Mod4Mask", arg) == 0)
+		return Mod4Mask;
+	else if (strcmp("Shift", arg) == 0 || strcmp("ShiftMask", arg) == 0)
+		return ShiftMask;
+	return -1;
+}
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 	struct arguments *args = state->input;
 	
 	/* match args */
 	switch (key)
 	{
-	case 'm':
-		/* set modifier */
-		if (strcmp("Control", arg) == 0 || strcmp("ControlMask", arg) == 0)
-			args->modifier = ControlMask;
-		else if (strcmp("Mod1", arg) == 0 || strcmp("Mod1Mask", arg) == 0)
-			args->modifier = Mod1Mask;
-		else if (strcmp("Mod4", arg) == 0 || strcmp("Mod4Mask", arg) == 0)
-			args->modifier = Mod4Mask;
-		else if (strcmp("Shift", arg) == 0 || strcmp("ShiftMask", arg) == 0)
-			args->modifier = ShiftMask;
-		break;
 	case 's':
 		/* deity state */
 		args->type = DEITY_STATE;
@@ -72,9 +73,24 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 		/* deity mode */
 		args->type = DEITY_MODE;
 		break;
-	default:
-		/* do nothing -- err will  throw somewhere else needbe */
+	case ARGP_KEY_ARG:
+		if (state->arg_num > 1)
+			argp_usage(state);
+
+		// match modifier
+		args->args[state->arg_num] = arg;
+		args->modifier = match_modifier(arg);
+		if (args->modifier == -1)
+			// TODO: more detailed error message may be nice here
+			argp_usage(state);
+
 		break;
+	case ARGP_KEY_END:
+		if (state->arg_num < 1)
+			argp_usage(state);
+		break;
+	case ARGP_KEY_NO_ARGS: argp_usage(state);
+	default: return ARGP_ERR_UNKNOWN;
 	}
 
     return 0;
@@ -213,18 +229,10 @@ int main(int argc, char *argv[])
 	arguments.modifier = -1;
 
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-	/* check to ensure flags have been set */
-	if (arguments.modifier == -1)
-		/* FIXME: should replace with argp_usage */
-		exit(1);
-	else if (arguments.type == TYPERR)
-		/* FIXME: ^ */
-		exit(1);
 	
 	deity();
 	
 	/* if we've made it here, everything likely hasn't burned down,
 	 * so exit gracefully */
-	return 0;
+	exit(0);
 }

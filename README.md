@@ -3,16 +3,15 @@
 deity is a little program I wrote to simulate emacs' [god-mode](https://github.com/emacsorphanage/god-mode)
 at a text-editor agnostic level. To use it, simply:
 
-	deity {-s, -t} {-m, --modifier} <X11 Key Mask>
+	deity {-s, -t} <X11 Key Mask>
 
 example:
 
-	deity -s -m ControlMask
+	deity -s ControlMask
 
 where:
 
 	-s: shortened version of --state; one keypress is in "deity mode", then exit
-	-m: shortened version of --modifier: specify which mask to use
 	ControlMask: an Xlib key mask, specifies to append C- to any incoming key
 
 Therefore, the command above when ran would wait for user input, intercept the
@@ -27,15 +26,11 @@ it's somewhat readable. :)
 Usage: deity [OPTION...] <MODIFER>
 deity --- a daemon-esque way to simulate modifier keys
 
-	-m, --modifier=<MODIFIER>  Modifier to prefix keys with.
-	-s, --state                Start deity in deity-state.
-	-t, --mode                 Start deity in deity-mode.
-	-?, --help                 Give this help list
-	--usage                    Give a short usage message
-	-V, --version              Print program version
-
-Mandatory or optional arguments to long options are also mandatory or optional
-for any corresponding short options.
+  -s, --state                Start deity in deity-state.
+  -t, --mode                 Start deity in deity-mode.
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
 
 Report bugs to <hcurfman@keemail.me>.
 ```
@@ -54,4 +49,3 @@ deity comes with a Makefile, so just:
    - deity allows adding a mask to a keypress with modifier
    - next support passing multiple modifiers into deity
 - better error handling
-- verbose mode?

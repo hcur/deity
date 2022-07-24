@@ -1,5 +1,5 @@
 NAME = deity
-VERSION = 20220612.1
+VERSION = 20220724.1
 
 CC = gcc
 CFLAGS += -lX11
@@ -18,6 +18,9 @@ install:
 uninstall:
 	@echo removing ${NAME} executable from ${DESTDIR}${PREFIX}${BINDIR}
 	@rm -f ${DESTDIR}${BINDIR}
+
+tar:
+	@tar -cvf ${VERSION}.tar deity.c Makefile LICENSE
 
 clean:
 	@echo cleaning

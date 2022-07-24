@@ -1,0 +1,3 @@
+releases/*
+deity
+!deity.c
