@@ -1,5 +1,5 @@
 NAME = deity
-VERSION = 20220724.1
+VERSION = 20220725.1
 
 CC = gcc
 CFLAGS += -lX11
@@ -13,7 +13,7 @@ ${NAME}: ${NAME}.c
 
 install:
 	@echo installing ${NAME} executable to ${DESTDIR}${PREFIX}${BINDIR}
-	@install -Dm775 ${NAME} ${DESTDIR}${PREFIX}${BINDIR}
+	@install -Dm775 ${NAME} -t ${DESTDIR}${PREFIX}${BINDIR}
 
 uninstall:
 	@echo removing ${NAME} executable from ${DESTDIR}${PREFIX}${BINDIR}
